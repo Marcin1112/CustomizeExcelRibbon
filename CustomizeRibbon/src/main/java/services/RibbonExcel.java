@@ -1,4 +1,4 @@
-package services.zip;
+package services;
 
 import java.io.IOException;
 
@@ -7,6 +7,8 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.SAXException;
+
+import javafx.scene.control.TreeView;
 
 /**
  * Customize Ribbon
@@ -35,12 +37,14 @@ abstract class RibbonExcel {
 	/**
 	 * customize Ribbon by write CustomUI.xml file
 	 * 
+	 * @param tree
+	 *            TreeView
 	 * @throws TransformerException
 	 *             Exception
 	 * @throws ParserConfigurationException
 	 *             Exception
 	 */
-	public abstract void writeXML() throws TransformerException, ParserConfigurationException;
+	public abstract void writeXML(TreeView<String> tree) throws TransformerException, ParserConfigurationException;
 
 	/**
 	 * create folder "customUI" and add new target to the .rels file

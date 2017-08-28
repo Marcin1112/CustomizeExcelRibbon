@@ -1,4 +1,4 @@
-package services.zip;
+package services;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import javafx.scene.control.TreeView;
 
 /**
  * Customize Ribbon
@@ -51,8 +53,10 @@ public class RibbonExcelImpl extends RibbonExcel {
 	 * @inheritDoc
 	 */
 	@Override
-	public void writeXML() throws TransformerException, ParserConfigurationException {
-		WriteXML.write(outputFolder + "\\customUI\\" + "customUI14.xml");
+	public void writeXML(TreeView<String> tree) throws TransformerException, ParserConfigurationException {
+		// WriteXML.write(outputFolder + "\\customUI\\" + "customUI14.xml");
+		String path = outputFolder + "\\customUI\\" + "customUI14.xml";
+		WriteXML.writeXML(path, tree);
 	}
 
 	/**
