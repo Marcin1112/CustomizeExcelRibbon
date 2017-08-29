@@ -61,4 +61,5 @@ public interface SimpleRibbonContainer {
 	 * @return List<String>
 	 */
 	public List<String> getListOfAvailableChildreen();
+
 }

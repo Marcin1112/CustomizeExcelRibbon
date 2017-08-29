@@ -2,6 +2,7 @@ package services;
 
 import java.io.File;
 import java.lang.reflect.GenericArrayType;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +24,7 @@ import ribbonElements.Group;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
 import ribbonElements.Tab;
+import tree.ExtendedTreeItem;
 
 /**
  * 
@@ -111,6 +113,7 @@ public class WriteXML {
 	}
 
 	/**
+	 * Generate XML
 	 * 
 	 * @param tree
 	 *            TreeView
@@ -134,32 +137,30 @@ public class WriteXML {
 
 		Element tabs = doc.createElement("tabs");
 		ribbon.appendChild(tabs);
-		
+
 		for (TreeItem<String> node : tree.getRoot().getChildren()) {
 			if (node.getValue().equals("Tab")) {
+				ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) node;
 				SimpleRibbonContainer tab = new Tab(doc);
-				tab.setAttribute("id", "customTab");
-				tab.setAttribute("label", "custom Tab");
+				fillAttributes(node1, tab);
 				Element tabXML = tab.getSimpleRibbonContainerElement();
 				tabs.appendChild(tabXML);
 
 				for (TreeItem<String> nodeGroup : node.getChildren()) {
 					if (nodeGroup.getValue().equals("Group")) {
+						ExtendedTreeItem<String> node2 = (ExtendedTreeItem<String>) nodeGroup;
 						Group group = new Group(doc);
-						group.setAttribute("id", "customGroup");
-						group.setAttribute("label", "Custom Group");
+						fillAttributes(node2, group);
 						Element groupXML = group.getXMLElement();
 						tabXML.appendChild(groupXML);
 
 						for (TreeItem<String> nodeButton : nodeGroup.getChildren()) {
 							if (nodeButton.getValue().equals("Button")) {
-								SimpleRibbonElement btn = new Button(doc);
-								btn.setAttribute("id", "customButton");
-								btn.setAttribute("label", "Custom Button");
-								btn.setAttribute("onAction", "Callback");
-								btn.setAttribute("size", "large");
-								btn.setAttribute("imageMso", "HappyFace");
-								groupXML.appendChild(btn.getXMLElement());
+								ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+								Button btn = new Button(doc);
+								fillAttributes(node3, btn);
+								Element buttonXML = btn.getXMLElement();
+								groupXML.appendChild(buttonXML);
 							}
 						}
 					}
@@ -167,5 +168,17 @@ public class WriteXML {
 			}
 		}
 		return doc;
+	}
+
+	/**
+	 * Fill attributes of TreeView. Used in generateXML method.
+	 * 
+	 * @param node1
+	 * @param tab
+	 */
+	private static void fillAttributes(ExtendedTreeItem<String> node1, SimpleRibbonContainer tab) {
+		for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
+			tab.setAttribute(n.getKey(), n.getValue());
+		}
 	}
 }

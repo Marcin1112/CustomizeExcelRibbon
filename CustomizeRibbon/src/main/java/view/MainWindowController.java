@@ -49,22 +49,22 @@ public class MainWindowController {
 	@FXML
 	private Menu file;
 	@FXML
-	private MenuItem close;
+	private MenuItem save;
+	@FXML
+	private MenuItem about;
 	@FXML
 	private Button add;
 	@FXML
 	private VBox vBox;
-
-	Map<String, String> propertiesMap = new HashMap<String, String>();
 
 	public void initialize() {
 		fillTree();
 		fillRibbon();
 	}
 
-	// Event Listener on MenuItem[#close].onAction
+	// Event Listener on MenuItem[#save].onAction
 	@FXML
-	public void loadTree(ActionEvent event)
+	public void saveTree(ActionEvent event)
 			throws IOException, TransformerException, ParserConfigurationException, SAXException {
 		RibbonExcelImpl ribbon = new RibbonExcelImpl();
 		ribbon.setPathToExcelFile("C:\\Users\\Marcin\\Desktop\\plik.xlsm");
@@ -73,6 +73,13 @@ public class MainWindowController {
 		ribbon.writeXML(treeView);
 		ribbon.buildExcelFile();
 		ribbon.deleteDirectory();
+		// TODO
+	}
+
+	// Event Listener on MenuItem[#about].onAction
+	@FXML
+	public void showAutor(ActionEvent event) {
+		// TODO
 	}
 
 	@FXML
@@ -162,29 +169,44 @@ public class MainWindowController {
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 				ExtendedTreeItem<String> selectedItem = (ExtendedTreeItem<String>) newValue;
 				ExtendedTreeItem<String> selectedOldValue = (ExtendedTreeItem<String>) oldValue;
-				saveOldValue(selectedOldValue);
+				// saveOldValue(selectedOldValue);
 				onChange(selectedItem);
 			}
 
 		});
 	}
 
-	private void saveOldValue(ExtendedTreeItem<String> selectedOldValue) {
-
-	}
-
+	/**
+	 * Load data from new selectedItem to propertiesMap and textFields
+	 * 
+	 * @param selectedItem
+	 *            ExtendedTreeItem<String>
+	 */
 	private void onChange(ExtendedTreeItem<String> selectedItem) {
 		vBox.getChildren().clear();
 		vBox.setPadding(new Insets(10));
-		propertiesMap.clear();
 		try {
 			Map<String, String> map = selectedItem.getSimpleRibbonElement().getAttributes();
 			for (Entry<String, String> element : map.entrySet()) {
-				propertiesMap.put(element.getKey(), element.getValue());
 				Label label1 = new Label(element.getKey());
 				label1.setFont(new Font(16));
 				label1.setPrefWidth(150);
 				TextField txt = new TextField(element.getValue());
+
+				// onChange event
+				txt.textProperty().addListener(new ChangeListener<String>() {
+
+					@Override
+					public void changed(ObservableValue<? extends String> observable, String oldValue,
+							String newValue) {
+						if (!newValue.trim().equals("")) {
+							selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newValue);
+						} else {
+							selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+						}
+					}
+				});
+
 				txt.setFont(new Font(16));
 				HBox hBox = new HBox();
 				hBox.setPadding(new Insets(4));

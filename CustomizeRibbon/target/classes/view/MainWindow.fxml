@@ -82,19 +82,12 @@
         <menus>
           <Menu fx:id="file" mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="close" mnemonicParsing="false" onAction="#loadTree" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="save" mnemonicParsing="false" onAction="#saveTree" text="Save to Excel file" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="about" mnemonicParsing="false" onAction="#showAutor" text="About" />
             </items>
           </Menu>
         </menus>
