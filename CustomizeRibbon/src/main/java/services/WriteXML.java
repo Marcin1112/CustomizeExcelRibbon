@@ -27,11 +27,14 @@ import org.w3c.dom.Element;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import ribbonElements.Button;
+import ribbonElements.CheckBox;
 import ribbonElements.Group;
 import ribbonElements.Image;
+import ribbonElements.LabelControl;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
 import ribbonElements.Tab;
+import ribbonElements.ToggleButton;
 import tree.ExtendedTreeItem;
 
 /**
@@ -75,6 +78,18 @@ public class WriteXML {
 
 	}
 
+	/**
+	 * Create XML file, containing information about images in ribbon
+	 * 
+	 * @param path
+	 *            path to XML file
+	 * @throws ParserConfigurationException
+	 *             Exception
+	 * @throws TransformerException
+	 *             Exception
+	 * @throws IOException
+	 *             Exception
+	 */
 	private static void createImagesInRibbon(String path)
 			throws ParserConfigurationException, TransformerException, IOException {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -115,7 +130,7 @@ public class WriteXML {
 	 * 
 	 * @param tree
 	 *            TreeView
-	 * @return Document
+	 * @return Document Document
 	 * @throws ParserConfigurationException
 	 *             Exception
 	 */
@@ -161,6 +176,24 @@ public class WriteXML {
 										fillAttributes(node3, btn);
 										Element buttonXML = btn.getXMLElement();
 										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Check Box")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										CheckBox btn = new CheckBox(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Label Control")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										LabelControl btn = new LabelControl(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Toggle Button")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										ToggleButton btn = new ToggleButton(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
 									}
 								}
 							}
@@ -176,7 +209,9 @@ public class WriteXML {
 	 * Fill attributes of TreeView. Used in generateXML method.
 	 * 
 	 * @param node1
+	 *            contain data to copy
 	 * @param tab
+	 *            here data are paste
 	 */
 	private static void fillAttributes(ExtendedTreeItem<String> node1, SimpleRibbonContainer tab) {
 		for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
@@ -184,6 +219,12 @@ public class WriteXML {
 		}
 	}
 
+	/**
+	 * Calculate numberOfImages and fill images Map
+	 * 
+	 * @param root
+	 *            treeView
+	 */
 	private static void refreshImagesMap(TreeItem<String> root) {
 		for (TreeItem<String> child : root.getChildren()) {
 			if (child.isLeaf()) {

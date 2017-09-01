@@ -55,11 +55,4 @@ public interface SimpleRibbonContainer {
 	 */
 	public void addChild(SimpleRibbonElement element);
 
-	/**
-	 * Get list of available childreen
-	 * 
-	 * @return List<String>
-	 */
-	public List<String> getListOfAvailableChildreen();
-
 }

@@ -10,7 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Tab
+ * Tabs
  * 
  * @author Marcin
  *
@@ -54,14 +54,12 @@ public class Tabs implements SimpleRibbonContainer {
 		return null;
 	}
 
+	/**
+	 * toString method
+	 */
 	@Override
 	public String toString() {
 		return "Tabs";
-	}
-
-	public List<String> getListOfAvailableChildreen() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

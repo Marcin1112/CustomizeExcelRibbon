@@ -10,7 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Standard button
+ * Image
  * 
  * @author Marcin
  *
@@ -75,7 +75,6 @@ public class Image implements SimpleRibbonElement, SimpleRibbonContainer {
 	/**
 	 * @inheritDoc
 	 */
-	@Override
 	public Element getSimpleRibbonContainerElement() {
 		return null;
 	}
@@ -85,13 +84,5 @@ public class Image implements SimpleRibbonElement, SimpleRibbonContainer {
 	 */
 	public void addChild(SimpleRibbonElement group) {
 		groups.add(group);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public List<String> getListOfAvailableChildreen() {
-		List<String> list = new ArrayList<String>();
-		return list;
 	}
 }

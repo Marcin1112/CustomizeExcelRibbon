@@ -125,14 +125,8 @@ public class Group implements SimpleRibbonContainer, SimpleRibbonElement {
 	}
 
 	/**
-	 * @inheritDoc
+	 * toString method
 	 */
-	public List<String> getListOfAvailableChildreen() {
-		List<String> list = new ArrayList<String>();
-		list.add(new Button(doc).toString());
-		return list;
-	}
-
 	@Override
 	public String toString() {
 		return "Group";

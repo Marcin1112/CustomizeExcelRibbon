@@ -105,15 +105,12 @@ public class Tab implements SimpleRibbonContainer, SimpleRibbonElement {
 		return tab;
 	}
 
+	/**
+	 * toString method
+	 */
 	@Override
 	public String toString() {
 		return "Tab";
-	}
-
-	public List<String> getListOfAvailableChildreen() {
-		List<String> list = new ArrayList<String>();
-		list.add(new Group(doc).toString());
-		return list;
 	}
 
 	/**

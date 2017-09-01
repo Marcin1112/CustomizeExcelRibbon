@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CustomizeRibbon
+Bundle-SymbolicName: CustomizeRibbon
+Bundle-Version: 1.0.0.qualifier
+Export-Package: main,
+ ribbonElements,
+ services,
+ tree,
+ view

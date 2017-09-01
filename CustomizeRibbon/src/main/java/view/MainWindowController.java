@@ -46,6 +46,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 
+/**
+ * Main controller
+ * 
+ * @author Marcin
+ *
+ */
 public class MainWindowController {
 	@FXML
 	private TreeView<String> treeView;
@@ -67,7 +73,20 @@ public class MainWindowController {
 		fillRibbon();
 	}
 
-	// Event Listener on MenuItem[#save].onAction
+	/**
+	 * Event Listener on MenuItem[#save].onAction
+	 * 
+	 * @param event
+	 *            ActionEvent
+	 * @throws IOException
+	 *             Exception
+	 * @throws TransformerException
+	 *             Exception
+	 * @throws ParserConfigurationException
+	 *             Exception
+	 * @throws SAXException
+	 *             Exception
+	 */
 	@FXML
 	public void saveTree(ActionEvent event)
 			throws IOException, TransformerException, ParserConfigurationException, SAXException {
@@ -78,15 +97,24 @@ public class MainWindowController {
 		ribbon.writeXML(treeView);
 		ribbon.buildExcelFile();
 		ribbon.deleteDirectory();
-		// TODO
 	}
 
-	// Event Listener on MenuItem[#about].onAction
+	/**
+	 * Event Listener on MenuItem[#about].onAction
+	 * 
+	 * @param event
+	 *            ActionEvent
+	 */
 	@FXML
 	public void showAutor(ActionEvent event) {
 		// TODO
 	}
 
+	/**
+	 * Add child to the treeView
+	 * 
+	 * @param event
+	 */
 	@FXML
 	public void addToRibbon(ActionEvent event) {
 		ExtendedTreeItem<String> root = (ExtendedTreeItem<String>) treeView.getRoot();
@@ -126,6 +154,43 @@ public class MainWindowController {
 				} else {
 					alertError("Button", "Group");
 				}
+			} else if (selectedItem.getValue().equals("Check Box")) { // Add
+																		// CheckBox
+																		// to
+																		// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Check Box");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.CheckBox());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Check Box", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Toggle Button")) { // Add
+																			// ToggleButton
+																			// to
+																			// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Toggle Button");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.ToggleButton());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Toggle Button", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Toggle Button")) { // Add
+																			// Label
+																			// Control
+																			// to
+																			// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Label Control");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.LabelControl());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Toggle Button", "Group");
+				}
 			} else if (selectedItem.getValue().equals("Image")) { // Add image
 				if (selectedItemRibbon.getValue().equals("Images")) {
 					FileChooser fileChooser = new FileChooser(); // open
@@ -157,7 +222,9 @@ public class MainWindowController {
 
 	/**
 	 * @param child
+	 *            String
 	 * @param parent
+	 *            String
 	 */
 	private void alertError(String child, String parent) {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -166,6 +233,9 @@ public class MainWindowController {
 		alert.showAndWait();
 	}
 
+	/**
+	 * Initialize listOfAvailableControls
+	 */
 	public void fillTree() {
 		ExtendedTreeItem<String> root = new ExtendedTreeItem<String>("Root");
 		root.setExpanded(true);
@@ -179,26 +249,47 @@ public class MainWindowController {
 		ExtendedTreeItem<String> itemChild3 = new ExtendedTreeItem<String>("Button");
 		itemChild3.setExpanded(true);
 
-		ExtendedTreeItem<String> itemChild4 = new ExtendedTreeItem<String>("Image");
+		ExtendedTreeItem<String> itemChild4 = new ExtendedTreeItem<String>("Check Box");
 		itemChild4.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild5 = new ExtendedTreeItem<String>("Image");
+		itemChild5.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild6 = new ExtendedTreeItem<String>("Label Control");
+		itemChild6.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild7 = new ExtendedTreeItem<String>("Toggle Button");
+		itemChild7.setExpanded(true);
 
 		// root is the parent of itemChild
 		root.getChildren().add(itemChild1);
 		root.getChildren().add(itemChild2);
 		root.getChildren().add(itemChild3);
 		root.getChildren().add(itemChild4);
+		root.getChildren().add(itemChild5);
+		root.getChildren().add(itemChild6);
+		root.getChildren().add(itemChild7);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
 	}
 
+	/**
+	 * Initialize treeView
+	 */
 	private void fillRibbon() {
 		ExtendedTreeItem<String> root = new ExtendedTreeItem<String>("Ribbon");
 		root.setExpanded(true);
 		treeView.setRoot(root);
 		treeView.setShowRoot(false);
+
+		ExtendedTreeItem<String> images = new ExtendedTreeItem<String>("Images");
+		images.setExpanded(true);
+		root.getChildren().add(images);
+
 		ExtendedTreeItem<String> ribbon = new ExtendedTreeItem<String>("Ribbon");
 		ribbon.setExpanded(true);
 		root.getChildren().add(ribbon);
+
 		treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 				ExtendedTreeItem<String> selectedItem = (ExtendedTreeItem<String>) newValue;
@@ -208,10 +299,6 @@ public class MainWindowController {
 			}
 
 		});
-
-		ExtendedTreeItem<String> images = new ExtendedTreeItem<String>("Images");
-		images.setExpanded(true);
-		root.getChildren().add(images);
 	}
 
 	/**

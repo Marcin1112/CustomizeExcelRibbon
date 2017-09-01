@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * @author Marcin
  *
  */
-public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
+public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
 	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
@@ -26,7 +26,7 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public Button(Document doc) {
+	public ToggleButton(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +35,7 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	 * constructor
 	 * 
 	 */
-	public Button() {
+	public ToggleButton() {
 		fillMap();
 	}
 
@@ -50,6 +50,7 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 		attributes.put("getImage", null); // callback
 		attributes.put("getKeyTip", null); // callback
 		attributes.put("getLabel", null); // callback
+		attributes.put("getPressed", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
 		attributes.put("getShowLabel", null); // callback
@@ -107,13 +108,13 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	 * @inheritDoc
 	 */
 	public Element getXMLElement() {
-		Element button = doc.createElement("button");
+		Element toggleButton = doc.createElement("toggleButton");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				button.setAttribute(i.getKey(), i.getValue());
+				toggleButton.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return button;
+		return toggleButton;
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	 */
 	@Override
 	public String toString() {
-		return "Button";
+		return "ToggleButton";
 	}
 
 	/**
@@ -129,13 +130,13 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	 */
 	@Override
 	public Element getSimpleRibbonContainerElement() {
-		Element button = doc.createElement("button");
+		Element toggleButton = doc.createElement("toggleButton");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				button.setAttribute(i.getKey(), i.getValue());
+				toggleButton.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return button;
+		return toggleButton;
 	}
 
 	/**
@@ -144,5 +145,5 @@ public class Button implements SimpleRibbonElement, SimpleRibbonContainer {
 	public void addChild(SimpleRibbonElement group) {
 		groups.add(group);
 	}
-	
+
 }
