@@ -1,7 +1,13 @@
 package services;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.GenericArrayType;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,6 +28,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import ribbonElements.Button;
 import ribbonElements.Group;
+import ribbonElements.Image;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
 import ribbonElements.Tab;
@@ -31,63 +39,8 @@ import tree.ExtendedTreeItem;
  * @author Marcin Write data to xml file
  */
 public class WriteXML {
-	/**
-	 * Write data to xml file
-	 * 
-	 * @param path
-	 *            path to file
-	 * @throws TransformerException
-	 *             Exception
-	 * @throws ParserConfigurationException
-	 *             Exception
-	 */
-	public static void write(String path) throws TransformerException, ParserConfigurationException {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-		// root elements
-		Document doc = docBuilder.newDocument();
-		Element rootElement = doc.createElement("customUI");
-		rootElement.setAttribute("xmlns", "http://schemas.microsoft.com/office/2009/07/customui");
-		doc.appendChild(rootElement);
-
-		Element ribbon = doc.createElement("ribbon");
-		ribbon.setAttribute("startFromScratch", "false");
-		rootElement.appendChild(ribbon);
-
-		Element tabs = doc.createElement("tabs");
-		ribbon.appendChild(tabs);
-
-		SimpleRibbonContainer tab = new Tab(doc);
-		tab.setAttribute("id", "customTab");
-		tab.setAttribute("label", "custom Tab");
-		Element tabXML = tab.getSimpleRibbonContainerElement();
-		tabs.appendChild(tabXML);
-
-		Group group = new Group(doc);
-		group.setAttribute("id", "customGroup");
-		group.setAttribute("label", "Custom Group");
-		Element groupXML = group.getXMLElement();
-		tabXML.appendChild(groupXML);
-
-		SimpleRibbonElement btn = new Button(doc);
-		btn.setAttribute("id", "customButton");
-		btn.setAttribute("label", "Custom Button");
-		btn.setAttribute("onAction", "Callback");
-		btn.setAttribute("size", "large");
-		btn.setAttribute("imageMso", "HappyFace");
-		groupXML.appendChild(btn.getXMLElement());
-
-		// write the content into xml file
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(new File(path));
-
-		// Output to console for testing
-		// StreamResult result = new StreamResult(System.out);
-		transformer.transform(source, result);
-	}
+	static int numberOfImages = 0;
+	static Map<Integer, Image> images = new HashMap<Integer, Image>();
 
 	/**
 	 * Write the content into xml file
@@ -100,15 +53,60 @@ public class WriteXML {
 	 *             Exception
 	 * @throws ParserConfigurationException
 	 *             Exception
+	 * @throws IOException
+	 *             Exception
 	 */
 	public static void writeXML(String path, TreeView<String> tree)
-			throws TransformerException, ParserConfigurationException {
+			throws TransformerException, ParserConfigurationException, IOException {
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		Document doc = generateXML(tree);
 		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(new File(path));
+		StreamResult result = new StreamResult(new File(path + "customUI14.xml"));
+		transformer.transform(source, result);
+
+		images.clear();
+		numberOfImages = 0;
+		refreshImagesMap(tree.getRoot());
+		if (numberOfImages > 0) { // there are exist images in a ribbon
+			createImagesInRibbon(path);
+		}
+
+	}
+
+	private static void createImagesInRibbon(String path)
+			throws ParserConfigurationException, TransformerException, IOException {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+		// root elements
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("Relationships");
+		rootElement.setAttribute("xmlns", "http://schemas.openxmlformats.org/package/2006/relationships");
+		doc.appendChild(rootElement);
+
+		for (Entry<Integer, Image> e : images.entrySet()) {
+			String pathImage = e.getValue().getAttributeValue("pathToFile");
+			String id = e.getValue().getAttributeValue("id");
+
+			Element ribbon = doc.createElement("Relationship");
+			ribbon.setAttribute("Id", id);
+			ribbon.setAttribute("Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image");
+
+			int index = pathImage.lastIndexOf("\\");
+			ribbon.setAttribute("Target", pathImage.substring(index + 1));
+			rootElement.appendChild(ribbon);
+
+			File source = new File(pathImage);
+			File dest = new File(path);
+			FileUtils.copyFileToDirectory(source, dest);
+		}
+
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(new File(path + "\\_rels\\customUI14.xml.rels"));
 		transformer.transform(source, result);
 	}
 
@@ -139,28 +137,32 @@ public class WriteXML {
 		ribbon.appendChild(tabs);
 
 		for (TreeItem<String> node : tree.getRoot().getChildren()) {
-			if (node.getValue().equals("Tab")) {
-				ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) node;
-				SimpleRibbonContainer tab = new Tab(doc);
-				fillAttributes(node1, tab);
-				Element tabXML = tab.getSimpleRibbonContainerElement();
-				tabs.appendChild(tabXML);
+			if (node.getValue().equals("Ribbon")) {
+				for (TreeItem<String> nodeR : node.getChildren()) {
+					if (nodeR.getValue().equals("Tab")) {
+						ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) nodeR;
+						SimpleRibbonContainer tab = new Tab(doc);
+						fillAttributes(node1, tab);
+						Element tabXML = tab.getSimpleRibbonContainerElement();
+						tabs.appendChild(tabXML);
 
-				for (TreeItem<String> nodeGroup : node.getChildren()) {
-					if (nodeGroup.getValue().equals("Group")) {
-						ExtendedTreeItem<String> node2 = (ExtendedTreeItem<String>) nodeGroup;
-						Group group = new Group(doc);
-						fillAttributes(node2, group);
-						Element groupXML = group.getXMLElement();
-						tabXML.appendChild(groupXML);
+						for (TreeItem<String> nodeGroup : nodeR.getChildren()) {
+							if (nodeGroup.getValue().equals("Group")) {
+								ExtendedTreeItem<String> node2 = (ExtendedTreeItem<String>) nodeGroup;
+								Group group = new Group(doc);
+								fillAttributes(node2, group);
+								Element groupXML = group.getXMLElement();
+								tabXML.appendChild(groupXML);
 
-						for (TreeItem<String> nodeButton : nodeGroup.getChildren()) {
-							if (nodeButton.getValue().equals("Button")) {
-								ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
-								Button btn = new Button(doc);
-								fillAttributes(node3, btn);
-								Element buttonXML = btn.getXMLElement();
-								groupXML.appendChild(buttonXML);
+								for (TreeItem<String> nodeButton : nodeGroup.getChildren()) {
+									if (nodeButton.getValue().equals("Button")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										Button btn = new Button(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+									}
+								}
 							}
 						}
 					}
@@ -179,6 +181,24 @@ public class WriteXML {
 	private static void fillAttributes(ExtendedTreeItem<String> node1, SimpleRibbonContainer tab) {
 		for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
 			tab.setAttribute(n.getKey(), n.getValue());
+		}
+	}
+
+	private static void refreshImagesMap(TreeItem<String> root) {
+		for (TreeItem<String> child : root.getChildren()) {
+			if (child.isLeaf()) {
+				if (child.getValue().equals("Image")) {
+					ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) child;
+					Image img = new Image();
+					for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
+						img.setAttribute(n.getKey(), n.getValue());
+					}
+					images.put(numberOfImages, img);
+					++numberOfImages;
+				}
+			} else {
+				refreshImagesMap(child);
+			}
 		}
 	}
 }

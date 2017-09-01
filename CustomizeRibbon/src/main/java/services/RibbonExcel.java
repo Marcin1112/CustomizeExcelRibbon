@@ -43,8 +43,11 @@ abstract class RibbonExcel {
 	 *             Exception
 	 * @throws ParserConfigurationException
 	 *             Exception
+	 * @throws IOException
+	 *             Exception
 	 */
-	public abstract void writeXML(TreeView<String> tree) throws TransformerException, ParserConfigurationException;
+	public abstract void writeXML(TreeView<String> tree)
+			throws TransformerException, ParserConfigurationException, IOException;
 
 	/**
 	 * create folder "customUI" and add new target to the .rels file

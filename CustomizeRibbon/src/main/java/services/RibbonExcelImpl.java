@@ -50,12 +50,12 @@ public class RibbonExcelImpl extends RibbonExcel {
 	}
 
 	/**
+	 * @throws IOException
 	 * @inheritDoc
 	 */
 	@Override
-	public void writeXML(TreeView<String> tree) throws TransformerException, ParserConfigurationException {
-		// WriteXML.write(outputFolder + "\\customUI\\" + "customUI14.xml");
-		String path = outputFolder + "\\customUI\\" + "customUI14.xml";
+	public void writeXML(TreeView<String> tree) throws TransformerException, ParserConfigurationException, IOException {
+		String path = outputFolder + "\\customUI\\";
 		WriteXML.writeXML(path, tree);
 	}
 
@@ -67,8 +67,12 @@ public class RibbonExcelImpl extends RibbonExcel {
 			throws TransformerException, ParserConfigurationException, SAXException, IOException {
 		// create folder "customUI"
 		File folder = new File(outputFolder + "\\customUI");
+		File folder_rels = new File(outputFolder + "\\customUI\\_rels");
 		if (!folder.exists()) {
 			folder.mkdir();
+		}
+		if (!folder_rels.exists()) { // for images _rels file
+			folder_rels.mkdir();
 		}
 
 		// add new target to the DOM of .rels file
@@ -89,6 +93,25 @@ public class RibbonExcelImpl extends RibbonExcel {
 		DOMSource source = new DOMSource(document);
 		StreamResult result = new StreamResult(outputFolder + "\\_rels\\.rels");
 		transformer.transform(source, result);
+
+		// add ability to add images to ribbon
+		DocumentBuilderFactory documentBuilderFactory2 = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder2 = documentBuilderFactory2.newDocumentBuilder();
+
+		/* parse existing file to DOM */
+		Document document2 = documentBuilder2.parse(new File(outputFolder + "\\[Content_Types].xml"));
+		Element root2 = document2.getDocumentElement();
+		Element relationship2 = document2.createElement("Default");
+		relationship2.setAttribute("ContentType", "image/.png");
+		relationship2.setAttribute("Extension", "png");
+		root2.appendChild(relationship2);
+
+		// save changes in .rels file
+		TransformerFactory transformerFactory2 = TransformerFactory.newInstance();
+		Transformer transformer2 = transformerFactory2.newTransformer();
+		DOMSource source2 = new DOMSource(document2);
+		StreamResult result2 = new StreamResult(outputFolder + "\\[Content_Types].xml");
+		transformer2.transform(source2, result2);
 	}
 
 	/**

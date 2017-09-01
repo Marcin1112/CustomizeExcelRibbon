@@ -3,6 +3,7 @@ package view;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.xml.sax.SAXException;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.MenuItem;
@@ -28,6 +30,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import ribbonElements.Group;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.Tab;
@@ -38,6 +42,7 @@ import javafx.scene.control.Alert.AlertType;
 import services.RibbonExcelImpl;
 import tree.ExtendedTreeItem;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 
@@ -99,10 +104,7 @@ public class MainWindowController {
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setHeaderText("An error occurred");
-					alert.setContentText("You can add 'Tab' to the 'Ribbon' only.");
-					alert.showAndWait();
+					alertError("Tab", "Ribbon");
 				}
 			} else if (selectedItem.getValue().equals("Group")) { // Add group
 																	// to tab
@@ -112,10 +114,7 @@ public class MainWindowController {
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setHeaderText("An error occurred");
-					alert.setContentText("You can add 'Group' to the 'Tab' only.");
-					alert.showAndWait();
+					alertError("Group", "Tab");
 				}
 			} else if (selectedItem.getValue().equals("Button")) { // Add button
 																	// to group
@@ -125,10 +124,27 @@ public class MainWindowController {
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setHeaderText("An error occurred");
-					alert.setContentText("You can add 'Button' to the 'Group' only.");
-					alert.showAndWait();
+					alertError("Button", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Image")) { // Add image
+				if (selectedItemRibbon.getValue().equals("Images")) {
+					FileChooser fileChooser = new FileChooser(); // open
+																	// fileChooser
+					fileChooser.setTitle("Open Picture");
+					fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG", "*.png"));
+					File file = fileChooser.showOpenDialog(null);
+
+					if (file != null) {
+						String path = file.getAbsolutePath();
+						ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Image");
+						ribbonElements.Image image = new ribbonElements.Image();
+						image.setAttribute("pathToFile", path);
+						itemChild1.setSimpleRibbonElement(image);
+						itemChild1.setExpanded(true);
+						selectedItemRibbon.getChildren().add(itemChild1);
+					}
+				} else {
+					alertError("Image", "Images");
 				}
 			}
 		} else {
@@ -137,6 +153,17 @@ public class MainWindowController {
 			alert.setContentText("You have to select components on the left and right side.");
 			alert.showAndWait();
 		}
+	}
+
+	/**
+	 * @param child
+	 * @param parent
+	 */
+	private void alertError(String child, String parent) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setHeaderText("An error occurred");
+		alert.setContentText("You can add '" + child + "' to the '" + parent + "' only.");
+		alert.showAndWait();
 	}
 
 	public void fillTree() {
@@ -152,10 +179,14 @@ public class MainWindowController {
 		ExtendedTreeItem<String> itemChild3 = new ExtendedTreeItem<String>("Button");
 		itemChild3.setExpanded(true);
 
+		ExtendedTreeItem<String> itemChild4 = new ExtendedTreeItem<String>("Image");
+		itemChild4.setExpanded(true);
+
 		// root is the parent of itemChild
 		root.getChildren().add(itemChild1);
 		root.getChildren().add(itemChild2);
 		root.getChildren().add(itemChild3);
+		root.getChildren().add(itemChild4);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
 	}
@@ -164,7 +195,10 @@ public class MainWindowController {
 		ExtendedTreeItem<String> root = new ExtendedTreeItem<String>("Ribbon");
 		root.setExpanded(true);
 		treeView.setRoot(root);
-		treeView.setShowRoot(true);
+		treeView.setShowRoot(false);
+		ExtendedTreeItem<String> ribbon = new ExtendedTreeItem<String>("Ribbon");
+		ribbon.setExpanded(true);
+		root.getChildren().add(ribbon);
 		treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 				ExtendedTreeItem<String> selectedItem = (ExtendedTreeItem<String>) newValue;
@@ -174,6 +208,10 @@ public class MainWindowController {
 			}
 
 		});
+
+		ExtendedTreeItem<String> images = new ExtendedTreeItem<String>("Images");
+		images.setExpanded(true);
+		root.getChildren().add(images);
 	}
 
 	/**
@@ -191,27 +229,71 @@ public class MainWindowController {
 				Label label1 = new Label(element.getKey());
 				label1.setFont(new Font(16));
 				label1.setPrefWidth(150);
-				TextField txt = new TextField(element.getValue());
-
-				// onChange event
-				txt.textProperty().addListener(new ChangeListener<String>() {
-
-					@Override
-					public void changed(ObservableValue<? extends String> observable, String oldValue,
-							String newValue) {
-						if (!newValue.trim().equals("")) {
-							selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newValue);
-						} else {
-							selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
-						}
-					}
-				});
-
-				txt.setFont(new Font(16));
 				HBox hBox = new HBox();
 				hBox.setPadding(new Insets(4));
 				hBox.getChildren().add(label1);
-				hBox.getChildren().add(txt);
+
+				if (element.getKey().equals("enabled") || element.getKey().equals("showImage")
+						|| element.getKey().equals("showLabel") || element.getKey().equals("visible")) {
+					final String[] values = { "true", "false", "" };
+					ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList(values));
+					choiceBox.getSelectionModel().select(element.getValue());
+					choiceBox.setStyle("-fx-font: 16px \"Arial\";"); // setFont(new
+																		// Font(16));
+					choiceBox.setPrefWidth(200);// label1.setPrefWidth(150);
+					choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+						@Override
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+								Number newValue) {
+							String newVal = values[newValue.intValue()];
+							if (!newVal.trim().equals("")) {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newVal);
+							} else {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+							}
+						}
+					});
+					hBox.getChildren().add(choiceBox);
+				} else if (element.getKey().equals("size")) {
+					final String[] values = { "large", "normal", "" };
+					ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList(values));
+					choiceBox.getSelectionModel().select(element.getValue());
+					choiceBox.setStyle("-fx-font: 16px \"Arial\";"); // setFont(new
+																		// Font(16));
+					choiceBox.setPrefWidth(200);// label1.setPrefWidth(150);
+					choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+						@Override
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+								Number newValue) {
+							String newVal = values[newValue.intValue()];
+							if (!newVal.trim().equals("")) {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newVal);
+							} else {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+							}
+
+						}
+					});
+					hBox.getChildren().add(choiceBox);
+				} else {
+					TextField txt = new TextField(element.getValue());
+					// onChange event on textField
+					txt.textProperty().addListener(new ChangeListener<String>() {
+						@Override
+						public void changed(ObservableValue<? extends String> observable, String oldValue,
+								String newValue) {
+							if (!newValue.trim().equals("")) {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newValue);
+							} else {
+								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+							}
+						}
+					});
+					txt.setFont(new Font(16));
+					hBox.getChildren().add(txt);
+				}
 				vBox.getChildren().add(hBox);
 			}
 		} catch (Exception e) {
