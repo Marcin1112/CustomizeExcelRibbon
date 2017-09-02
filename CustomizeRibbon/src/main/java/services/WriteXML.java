@@ -28,9 +28,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import ribbonElements.Button;
 import ribbonElements.CheckBox;
+import ribbonElements.ComboBox;
+import ribbonElements.EditBox;
 import ribbonElements.Group;
 import ribbonElements.Image;
+import ribbonElements.Item;
 import ribbonElements.LabelControl;
+import ribbonElements.Separator;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
 import ribbonElements.Tab;
@@ -194,6 +198,34 @@ public class WriteXML {
 										fillAttributes(node3, btn);
 										Element buttonXML = btn.getXMLElement();
 										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Edit Box")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										EditBox btn = new EditBox(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Separator")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										Separator btn = new Separator(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+									} else if (nodeButton.getValue().equals("Combo Box")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										ComboBox btn = new ComboBox(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+
+										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
+											if (nodeItem.getValue().equals("Item")) {
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												Item itm = new Item(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											}
+										}
 									}
 								}
 							}

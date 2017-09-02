@@ -178,18 +178,52 @@ public class MainWindowController {
 				} else {
 					alertError("Toggle Button", "Group");
 				}
-			} else if (selectedItem.getValue().equals("Toggle Button")) { // Add
-																			// Label
-																			// Control
-																			// to
-																			// group
+			} else if (selectedItem.getValue().equals("Edit Box")) { // Add
+																		// EditBox
+																		// to
+																		// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
-					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Label Control");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.LabelControl());
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Edit Box");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.EditBox());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					alertError("Toggle Button", "Group");
+					alertError("Edit Box", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Separator")) { // Add
+																		// Separator
+																		// to
+																		// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Separator");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.Separator());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Separator", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Combo Box")) { // Add
+																		// Combo
+																		// Box
+																		// to
+																		// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Combo Box");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.ComboBox());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Combo Box", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Item")) { // Add Item to
+																	// ComboBox
+				if (selectedItemRibbon.getValue().equals("Combo Box")) {
+					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Item");
+					itemChild2.setSimpleRibbonElement(new ribbonElements.Item());
+					itemChild2.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild2);
+				} else {
+					alertError("Item", "Combo Box");
 				}
 			} else if (selectedItem.getValue().equals("Image")) { // Add image
 				if (selectedItemRibbon.getValue().equals("Images")) {
@@ -261,6 +295,18 @@ public class MainWindowController {
 		ExtendedTreeItem<String> itemChild7 = new ExtendedTreeItem<String>("Toggle Button");
 		itemChild7.setExpanded(true);
 
+		ExtendedTreeItem<String> itemChild8 = new ExtendedTreeItem<String>("Edit Box");
+		itemChild8.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild9 = new ExtendedTreeItem<String>("Separator");
+		itemChild9.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild10 = new ExtendedTreeItem<String>("Combo Box");
+		itemChild10.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild11 = new ExtendedTreeItem<String>("Item");
+		itemChild11.setExpanded(true);
+
 		// root is the parent of itemChild
 		root.getChildren().add(itemChild1);
 		root.getChildren().add(itemChild2);
@@ -269,6 +315,10 @@ public class MainWindowController {
 		root.getChildren().add(itemChild5);
 		root.getChildren().add(itemChild6);
 		root.getChildren().add(itemChild7);
+		root.getChildren().add(itemChild8);
+		root.getChildren().add(itemChild9);
+		root.getChildren().add(itemChild10);
+		root.getChildren().add(itemChild11);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
 	}

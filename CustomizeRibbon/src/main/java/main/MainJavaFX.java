@@ -26,7 +26,7 @@ public class MainJavaFX extends Application {
 	public void initRootLayout() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/view/MainWindow.fxml"));
+			loader.setLocation(MainJavaFX.class.getResource("/view/MainWindow.fxml"));
 			rootLayout = (AnchorPane) loader.load();
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
