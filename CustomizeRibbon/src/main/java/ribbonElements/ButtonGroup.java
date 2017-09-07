@@ -10,12 +10,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Toggle Button
+ * Button Group
  * 
  * @author Marcin
  *
  */
-public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class ButtonGroup implements SimpleRibbonElement, SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
 	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
@@ -26,7 +26,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public ToggleButton(Document doc) {
+	public ButtonGroup(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +35,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * constructor
 	 * 
 	 */
-	public ToggleButton() {
+	public ButtonGroup() {
 		fillMap();
 	}
 
@@ -43,25 +43,9 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * fill map 'attributes'
 	 */
 	public void fillMap() {
-		attributes.put("description", null); // description
-		attributes.put("enabled", null); // enabled state
-		attributes.put("getDescription", null); // callback
-		attributes.put("getEnabled", null); // callback
-		attributes.put("getImage", null); // callback
-		attributes.put("getKeytip", null); // callback
-		attributes.put("getLabel", null); // callback
-		attributes.put("getPressed", null); // callback
-		attributes.put("getScreentip", null); // callback
-		attributes.put("getShowImage", null); // callback
-		attributes.put("getShowLabel", null); // callback
-		attributes.put("getSize", null); // callback
-		attributes.put("getSuperTip", null); // callback
 		attributes.put("getVisible", null); // callback
 		attributes.put("id", null); // control identifier
-		attributes.put("idMso", null); // built-in control identifier
 		attributes.put("idQ", null); // qualified control identifier
-		attributes.put("image", null); // custom image identifier
-		attributes.put("imageMso", null); // built-in image identifier
 		attributes.put("insertAfterMso", null); // identifier of built-in
 												// control to insert after
 		attributes.put("insertAfterQ", null); // qualified identifier of control
@@ -70,16 +54,6 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 													// control to insert before
 		attributes.put("insertBeforeQ", null); // qualified identifier of
 												// control to insert before
-		attributes.put("keytip", null); // keytip
-		attributes.put("label", null); // label
-		attributes.put("onAction", null); // callback
-		attributes.put("screentip", null); // screentip
-		attributes.put("showImage", null); // show image
-		attributes.put("showLabel", null); // show label
-		attributes.put("size", null); // control size. Possible values: large,
-										// normal
-		attributes.put("supertip", null); // supertip
-		attributes.put("tag", null); // tag
 		attributes.put("visible", null); // control visibility
 	}
 
@@ -108,13 +82,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @inheritDoc
 	 */
 	public Element getXMLElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element buttonGroup = doc.createElement("buttonGroup");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				buttonGroup.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return buttonGroup;
 	}
 
 	/**
@@ -122,7 +96,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public String toString() {
-		return "ToggleButton";
+		return "Button Group";
 	}
 
 	/**
@@ -130,13 +104,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public Element getSimpleRibbonContainerElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element buttonGroup = doc.createElement("buttonGroup");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				buttonGroup.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return buttonGroup;
 	}
 
 	/**
@@ -145,5 +119,5 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	public void addChild(SimpleRibbonElement group) {
 		groups.add(group);
 	}
-
+	
 }

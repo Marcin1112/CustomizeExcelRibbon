@@ -48,7 +48,7 @@ public class UnsizedButton implements SimpleRibbonElement, SimpleRibbonContainer
 		attributes.put("getDescription", null); // callback
 		attributes.put("getEnabled", null); // callback
 		attributes.put("getImage", null); // callback
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
@@ -74,8 +74,6 @@ public class UnsizedButton implements SimpleRibbonElement, SimpleRibbonContainer
 		attributes.put("screentip", null); // screentip
 		attributes.put("showImage", null); // show image
 		attributes.put("showLabel", null); // show label
-		attributes.put("size", null); // control size. Possible values: large,
-										// normal
 		attributes.put("supertip", null); // supertip
 		attributes.put("tag", null); // tag
 		attributes.put("visible", null); // control visibility

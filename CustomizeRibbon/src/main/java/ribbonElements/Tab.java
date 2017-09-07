@@ -51,7 +51,7 @@ public class Tab implements SimpleRibbonContainer, SimpleRibbonElement {
 	 * fill Map 'attributes'
 	 */
 	public void fillMap() {
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getVisible", null); // callback
 		attributes.put("id", null); // control identifier

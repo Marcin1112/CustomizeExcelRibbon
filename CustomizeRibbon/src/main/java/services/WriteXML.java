@@ -27,6 +27,8 @@ import org.w3c.dom.Element;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import ribbonElements.Button;
+import ribbonElements.ButtonGroup;
+import ribbonElements.ButtonInsideSplitButton;
 import ribbonElements.CheckBox;
 import ribbonElements.ComboBox;
 import ribbonElements.DialogBoxLauncher;
@@ -39,9 +41,13 @@ import ribbonElements.LabelControl;
 import ribbonElements.Separator;
 import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
+import ribbonElements.SplitButton;
 import ribbonElements.Tab;
 import ribbonElements.ToggleButton;
+import ribbonElements.ToggleButtonInsideSplitButton;
 import ribbonElements.UnsizedButton;
+import ribbonElements.UnsizedGallery;
+import ribbonElements.UnsizedToggleButton;
 import tree.ExtendedTreeItem;
 
 /**
@@ -253,9 +259,73 @@ public class WriteXML {
 										groupXML.appendChild(buttonXML);
 
 										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
-											if (nodeItem.getValue().equals("Unsized Button")) {
+											if (nodeItem.getValue().equals("Button")) {
 												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
 												UnsizedButton itm = new UnsizedButton(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											}
+										}
+									} else if (nodeButton.getValue().equals("Button Group")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										ButtonGroup btn = new ButtonGroup(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+
+										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
+											if (nodeItem.getValue().equals("Button")) { // Unsized
+																						// Button
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedButton itm = new UnsizedButton(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											} else if (nodeItem.getValue().equals("Gallery")) { // Unsized
+																								// Gallery
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedGallery itm = new UnsizedGallery(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+
+												for (TreeItem<String> nodeItem2 : nodeItem.getChildren()) {
+													if (nodeItem2.getValue().equals("Item")) {
+														ExtendedTreeItem<String> nodeIt2 = (ExtendedTreeItem<String>) nodeItem2;
+														Item itm2 = new Item(doc);
+														fillAttributes(nodeIt2, itm2);
+														Element itemXML2 = itm2.getXMLElement();
+														itemXML.appendChild(itemXML2);
+													}
+												}
+											} else if (nodeItem.getValue().equals("Toggle Button")) { // Unsized
+																										// ToggleButton
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedToggleButton itm = new UnsizedToggleButton(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											}
+										}
+									} else if (nodeButton.getValue().equals("Split Button")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										SplitButton btn = new SplitButton(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+
+										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
+											if (nodeItem.getValue().equals("Button")) {
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												ButtonInsideSplitButton itm = new ButtonInsideSplitButton(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											} else if (nodeItem.getValue().equals("Toggle Button")) {
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												ToggleButtonInsideSplitButton itm = new ToggleButtonInsideSplitButton(
+														doc);
 												fillAttributes(nodeIt, itm);
 												Element itemXML = itm.getXMLElement();
 												buttonXML.appendChild(itemXML);

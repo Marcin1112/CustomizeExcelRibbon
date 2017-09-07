@@ -48,7 +48,7 @@ public class CheckBox implements SimpleRibbonElement, SimpleRibbonContainer {
 		attributes.put("getDescription", null); // callback
 		attributes.put("getEnabled", null); // callback
 		attributes.put("getImage", null); // callback
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getPressed", null); // callback
 		attributes.put("getScreentip", null); // callback

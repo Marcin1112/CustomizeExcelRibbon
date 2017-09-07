@@ -52,7 +52,7 @@ public class ComboBox implements SimpleRibbonElement, SimpleRibbonContainer {
 		attributes.put("getItemLabel", null); // callback
 		attributes.put("getItemScreentip", null); // callback
 		attributes.put("getItemSupertip", null); // callback
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback

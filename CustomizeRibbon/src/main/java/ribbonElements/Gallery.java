@@ -58,7 +58,7 @@ public class Gallery implements SimpleRibbonElement, SimpleRibbonContainer {
 		attributes.put("getItemScreentip", null); // callback
 		attributes.put("getItemSupertip", null); // callback
 		attributes.put("getItemWidth", null); // callback
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getSelectedItemID", null); // callback

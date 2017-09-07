@@ -10,12 +10,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Toggle Button
+ * Unsized Toggle Button
  * 
  * @author Marcin
  *
  */
-public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class UnsizedToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
 	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
@@ -26,7 +26,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public ToggleButton(Document doc) {
+	public UnsizedToggleButton(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +35,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * constructor
 	 * 
 	 */
-	public ToggleButton() {
+	public UnsizedToggleButton() {
 		fillMap();
 	}
 
@@ -54,7 +54,6 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
 		attributes.put("getShowLabel", null); // callback
-		attributes.put("getSize", null); // callback
 		attributes.put("getSuperTip", null); // callback
 		attributes.put("getVisible", null); // callback
 		attributes.put("id", null); // control identifier
@@ -76,8 +75,6 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 		attributes.put("screentip", null); // screentip
 		attributes.put("showImage", null); // show image
 		attributes.put("showLabel", null); // show label
-		attributes.put("size", null); // control size. Possible values: large,
-										// normal
 		attributes.put("supertip", null); // supertip
 		attributes.put("tag", null); // tag
 		attributes.put("visible", null); // control visibility

@@ -10,12 +10,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Toggle Button
+ * Split Button
  * 
  * @author Marcin
  *
  */
-public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class SplitButton implements SimpleRibbonElement, SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
 	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
@@ -26,7 +26,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public ToggleButton(Document doc) {
+	public SplitButton(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +35,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * constructor
 	 * 
 	 */
-	public ToggleButton() {
+	public SplitButton() {
 		fillMap();
 	}
 
@@ -50,7 +50,6 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 		attributes.put("getImage", null); // callback
 		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
-		attributes.put("getPressed", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
 		attributes.put("getShowLabel", null); // callback
@@ -108,13 +107,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @inheritDoc
 	 */
 	public Element getXMLElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element splitButton = doc.createElement("splitButton");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				splitButton.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return splitButton;
 	}
 
 	/**
@@ -122,7 +121,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public String toString() {
-		return "ToggleButton";
+		return "Split Button";
 	}
 
 	/**
@@ -130,13 +129,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public Element getSimpleRibbonContainerElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element splitButton = doc.createElement("splitButton");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				splitButton.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return splitButton;
 	}
 
 	/**

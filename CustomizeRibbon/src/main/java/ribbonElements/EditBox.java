@@ -46,7 +46,7 @@ public class EditBox implements SimpleRibbonElement, SimpleRibbonContainer {
 		attributes.put("enabled", null); // enabled state
 		attributes.put("getEnabled", null); // callback
 		attributes.put("getImage", null); // callback
-		attributes.put("getKeyTip", null); // callback
+		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback

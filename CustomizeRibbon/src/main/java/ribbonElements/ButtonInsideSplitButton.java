@@ -10,12 +10,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Toggle Button
+ * Standard button
  * 
  * @author Marcin
  *
  */
-public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class ButtonInsideSplitButton implements SimpleRibbonElement, SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
 	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
@@ -26,7 +26,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public ToggleButton(Document doc) {
+	public ButtonInsideSplitButton(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +35,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * constructor
 	 * 
 	 */
-	public ToggleButton() {
+	public ButtonInsideSplitButton() {
 		fillMap();
 	}
 
@@ -50,13 +50,10 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 		attributes.put("getImage", null); // callback
 		attributes.put("getKeytip", null); // callback
 		attributes.put("getLabel", null); // callback
-		attributes.put("getPressed", null); // callback
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
 		attributes.put("getShowLabel", null); // callback
-		attributes.put("getSize", null); // callback
 		attributes.put("getSuperTip", null); // callback
-		attributes.put("getVisible", null); // callback
 		attributes.put("id", null); // control identifier
 		attributes.put("idMso", null); // built-in control identifier
 		attributes.put("idQ", null); // qualified control identifier
@@ -76,11 +73,8 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 		attributes.put("screentip", null); // screentip
 		attributes.put("showImage", null); // show image
 		attributes.put("showLabel", null); // show label
-		attributes.put("size", null); // control size. Possible values: large,
-										// normal
 		attributes.put("supertip", null); // supertip
 		attributes.put("tag", null); // tag
-		attributes.put("visible", null); // control visibility
 	}
 
 	/**
@@ -108,13 +102,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 * @inheritDoc
 	 */
 	public Element getXMLElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element button = doc.createElement("button");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				button.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return button;
 	}
 
 	/**
@@ -122,7 +116,7 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public String toString() {
-		return "ToggleButton";
+		return "Button";
 	}
 
 	/**
@@ -130,13 +124,13 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	 */
 	@Override
 	public Element getSimpleRibbonContainerElement() {
-		Element toggleButton = doc.createElement("toggleButton");
+		Element button = doc.createElement("button");
 		for (Entry<String, String> i : attributes.entrySet()) {
 			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
+				button.setAttribute(i.getKey(), i.getValue());
 			}
 		}
-		return toggleButton;
+		return button;
 	}
 
 	/**
@@ -145,5 +139,5 @@ public class ToggleButton implements SimpleRibbonElement, SimpleRibbonContainer 
 	public void addChild(SimpleRibbonElement group) {
 		groups.add(group);
 	}
-
+	
 }
