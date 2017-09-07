@@ -29,7 +29,9 @@ import javafx.scene.control.TreeView;
 import ribbonElements.Button;
 import ribbonElements.CheckBox;
 import ribbonElements.ComboBox;
+import ribbonElements.DialogBoxLauncher;
 import ribbonElements.EditBox;
+import ribbonElements.Gallery;
 import ribbonElements.Group;
 import ribbonElements.Image;
 import ribbonElements.Item;
@@ -39,6 +41,7 @@ import ribbonElements.SimpleRibbonContainer;
 import ribbonElements.SimpleRibbonElement;
 import ribbonElements.Tab;
 import ribbonElements.ToggleButton;
+import ribbonElements.UnsizedButton;
 import tree.ExtendedTreeItem;
 
 /**
@@ -221,6 +224,38 @@ public class WriteXML {
 											if (nodeItem.getValue().equals("Item")) {
 												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
 												Item itm = new Item(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											}
+										}
+									} else if (nodeButton.getValue().equals("Gallery")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										Gallery btn = new Gallery(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+
+										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
+											if (nodeItem.getValue().equals("Item")) {
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												Item itm = new Item(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											}
+										}
+									} else if (nodeButton.getValue().equals("Dialog Box Launcher")) {
+										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
+										DialogBoxLauncher btn = new DialogBoxLauncher(doc);
+										fillAttributes(node3, btn);
+										Element buttonXML = btn.getXMLElement();
+										groupXML.appendChild(buttonXML);
+
+										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
+											if (nodeItem.getValue().equals("Unsized Button")) {
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedButton itm = new UnsizedButton(doc);
 												fillAttributes(nodeIt, itm);
 												Element itemXML = itm.getXMLElement();
 												buttonXML.appendChild(itemXML);

@@ -90,13 +90,21 @@ public class MainWindowController {
 	@FXML
 	public void saveTree(ActionEvent event)
 			throws IOException, TransformerException, ParserConfigurationException, SAXException {
-		RibbonExcelImpl ribbon = new RibbonExcelImpl();
-		ribbon.setPathToExcelFile("C:\\Users\\Marcin\\Desktop\\plik.xlsm");
-		ribbon.extractFiles();
-		ribbon.createEmptyRibbon();
-		ribbon.writeXML(treeView);
-		ribbon.buildExcelFile();
-		ribbon.deleteDirectory();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Excel file");
+		File file = fileChooser.showOpenDialog(null);
+
+		if (file != null) {
+			String path = file.getAbsolutePath();
+			
+			RibbonExcelImpl ribbon = new RibbonExcelImpl();
+			ribbon.setPathToExcelFile(path);
+			ribbon.extractFiles();
+			ribbon.createEmptyRibbon();
+			ribbon.writeXML(treeView);
+			ribbon.buildExcelFile();
+			ribbon.deleteDirectory();
+		}
 	}
 
 	/**
@@ -202,6 +210,18 @@ public class MainWindowController {
 				} else {
 					alertError("Separator", "Group");
 				}
+			} else if (selectedItem.getValue().equals("Dialog Box Launcher")) { // Add
+				// DialogBoxLauncher
+				// to
+				// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Dialog Box Launcher");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.DialogBoxLauncher());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Dialog Box Launcher", "Group");
+				}
 			} else if (selectedItem.getValue().equals("Combo Box")) { // Add
 																		// Combo
 																		// Box
@@ -215,6 +235,27 @@ public class MainWindowController {
 				} else {
 					alertError("Combo Box", "Group");
 				}
+			} else if (selectedItem.getValue().equals("Gallery")) { // Add
+																	// Gallery
+																	// to group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Gallery");
+					itemChild1.setSimpleRibbonElement(new ribbonElements.Gallery());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Gallery", "Group");
+				}
+			} else if (selectedItem.getValue().equals("Item")) { // Add Item to
+																	// Gallery
+				if (selectedItemRibbon.getValue().equals("Gallery")) {
+					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Item");
+					itemChild2.setSimpleRibbonElement(new ribbonElements.Item());
+					itemChild2.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild2);
+				} else {
+					alertError("Item", "Gallery");
+				}
 			} else if (selectedItem.getValue().equals("Item")) { // Add Item to
 																	// ComboBox
 				if (selectedItemRibbon.getValue().equals("Combo Box")) {
@@ -224,6 +265,18 @@ public class MainWindowController {
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
 					alertError("Item", "Combo Box");
+				}
+			} else if (selectedItem.getValue().equals("Unsized Button")) { // Add
+				// UnsizedButton
+				// to
+				// DialogBoxLauncher
+				if (selectedItemRibbon.getValue().equals("Dialog Box Launcher")) {
+					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Unsized Button");
+					itemChild2.setSimpleRibbonElement(new ribbonElements.UnsizedButton());
+					itemChild2.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild2);
+				} else {
+					alertError("Unsized Button", "Dialog Box Launcher");
 				}
 			} else if (selectedItem.getValue().equals("Image")) { // Add image
 				if (selectedItemRibbon.getValue().equals("Images")) {
@@ -307,6 +360,15 @@ public class MainWindowController {
 		ExtendedTreeItem<String> itemChild11 = new ExtendedTreeItem<String>("Item");
 		itemChild11.setExpanded(true);
 
+		ExtendedTreeItem<String> itemChild12 = new ExtendedTreeItem<String>("Gallery");
+		itemChild12.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild13 = new ExtendedTreeItem<String>("Dialog Box Launcher");
+		itemChild13.setExpanded(true);
+
+		ExtendedTreeItem<String> itemChild14 = new ExtendedTreeItem<String>("Unsized Button");
+		itemChild14.setExpanded(true);
+
 		// root is the parent of itemChild
 		root.getChildren().add(itemChild1);
 		root.getChildren().add(itemChild2);
@@ -319,6 +381,9 @@ public class MainWindowController {
 		root.getChildren().add(itemChild9);
 		root.getChildren().add(itemChild10);
 		root.getChildren().add(itemChild11);
+		root.getChildren().add(itemChild12);
+		root.getChildren().add(itemChild13);
+		root.getChildren().add(itemChild14);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
 	}
