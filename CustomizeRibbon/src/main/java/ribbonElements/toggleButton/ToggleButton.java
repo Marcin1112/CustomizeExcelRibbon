@@ -1,4 +1,4 @@
-package ribbonElements;
+package ribbonElements.toggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,16 +9,18 @@ import java.util.Map.Entry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ribbonElements.SimpleRibbonContainer;
+
 /**
- * Toggle Button Inside Split Button
+ * Toggle Button
  * 
  * @author Marcin
  *
  */
-public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class ToggleButton implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * constructor
@@ -26,7 +28,7 @@ public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, Simpl
 	 * @param doc
 	 *            reference to the XML document in which button will be created
 	 */
-	public ToggleButtonInsideSplitButton(Document doc) {
+	public ToggleButton(Document doc) {
 		this.doc = doc;
 		fillMap();
 	}
@@ -35,7 +37,7 @@ public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, Simpl
 	 * constructor
 	 * 
 	 */
-	public ToggleButtonInsideSplitButton() {
+	public ToggleButton() {
 		fillMap();
 	}
 
@@ -54,7 +56,9 @@ public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, Simpl
 		attributes.put("getScreentip", null); // callback
 		attributes.put("getShowImage", null); // callback
 		attributes.put("getShowLabel", null); // callback
+		attributes.put("getSize", null); // callback
 		attributes.put("getSuperTip", null); // callback
+		attributes.put("getVisible", null); // callback
 		attributes.put("id", null); // control identifier
 		attributes.put("idMso", null); // built-in control identifier
 		attributes.put("idQ", null); // qualified control identifier
@@ -74,8 +78,11 @@ public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, Simpl
 		attributes.put("screentip", null); // screentip
 		attributes.put("showImage", null); // show image
 		attributes.put("showLabel", null); // show label
+		attributes.put("size", null); // control size. Possible values: large,
+										// normal
 		attributes.put("supertip", null); // supertip
 		attributes.put("tag", null); // tag
+		attributes.put("visible", null); // control visibility
 	}
 
 	/**
@@ -123,21 +130,7 @@ public class ToggleButtonInsideSplitButton implements SimpleRibbonElement, Simpl
 	/**
 	 * @inheritDoc
 	 */
-	@Override
-	public Element getSimpleRibbonContainerElement() {
-		Element toggleButton = doc.createElement("toggleButton");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				toggleButton.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return toggleButton;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 

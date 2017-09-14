@@ -2,7 +2,6 @@ package tree;
 
 import javafx.scene.control.TreeItem;
 import ribbonElements.SimpleRibbonContainer;
-import ribbonElements.SimpleRibbonElement;
 
 /**
  * Item that contain additional information
@@ -13,7 +12,6 @@ import ribbonElements.SimpleRibbonElement;
  *            Name of item
  */
 public class ExtendedTreeItem<String> extends TreeItem<String> {
-	SimpleRibbonElement simpleRibbonElement;
 	SimpleRibbonContainer simpleRibbonContainer;
 
 	/**
@@ -24,25 +22,6 @@ public class ExtendedTreeItem<String> extends TreeItem<String> {
 	 */
 	public ExtendedTreeItem(String itemText) {
 		super(itemText);
-	}
-
-	/**
-	 * Getter
-	 * 
-	 * @return SimpleRibbonElement
-	 */
-	public SimpleRibbonElement getSimpleRibbonElement() {
-		return simpleRibbonElement;
-	}
-
-	/**
-	 * Setter
-	 * 
-	 * @param simpleRibbonElement
-	 *            set SimpleRibbonElement
-	 */
-	public void setSimpleRibbonElement(SimpleRibbonElement simpleRibbonElement) {
-		this.simpleRibbonElement = simpleRibbonElement;
 	}
 
 	/**

@@ -5,7 +5,9 @@ import javafx.geometry.Insets;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -67,6 +69,8 @@ public class MainWindowController {
 	private Button add;
 	@FXML
 	private VBox vBox;
+	@FXML
+	private Button removeElement;
 
 	public void initialize() {
 		fillTree();
@@ -115,7 +119,31 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void showAutor(ActionEvent event) {
-		// TODO
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setHeaderText("Information about autor");
+		alert.setTitle("Autor");
+		alert.setContentText("Marcin Zabadaj \n" + "zabadajmarcin@gmail.com");
+		alert.showAndWait();
+	}
+
+	/**
+	 * Remove a child from the treeView
+	 * 
+	 * @param event
+	 */
+	@FXML
+	public void removeElement(ActionEvent event) {
+		ExtendedTreeItem<String> selectedItemRibbon = (ExtendedTreeItem<String>) treeView.getSelectionModel()
+				.getSelectedItem();
+		if (selectedItemRibbon.getValue().equals("Images") || selectedItemRibbon.getValue().equals("Ribbon")) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setHeaderText("An error occurred");
+			alert.setTitle("Error");
+			alert.setContentText("You can not remove 'Ribbon' or 'Images' node");
+			alert.showAndWait();
+		} else {
+			selectedItemRibbon.getParent().getChildren().remove(selectedItemRibbon);
+		}
 	}
 
 	/**
@@ -136,7 +164,7 @@ public class MainWindowController {
 																		// to
 																		// ribbon
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Tab");
-					itemChild1.setSimpleRibbonElement(new Tab());
+					itemChild1.setSimpleRibbonContainer(new Tab());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
@@ -146,36 +174,46 @@ public class MainWindowController {
 																	// to tab
 				if (selectedItemRibbon.getValue().equals("Tab")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Group");
-					itemChild1.setSimpleRibbonElement(new Group());
+					itemChild1.setSimpleRibbonContainer(new Group());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
 					alertError("Group", "Tab");
 				}
+			} else if (selectedItem.getValue().equals("Menu")) { // Add menu to
+																	// group
+				if (selectedItemRibbon.getValue().equals("Group")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Menu");
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.Menu());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else {
+					alertError("Menu", "Group");
+				}
 			} else if (selectedItem.getValue().equals("Button")) { // Add button
 																	// to group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Button");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.Button());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.button.Button());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else if (selectedItemRibbon.getValue().equals("Button Group")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Button");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.UnsizedButton());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.button.UnsizedButton());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else if (selectedItemRibbon.getValue().equals("Dialog Box Launcher")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Button");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.UnsizedButton());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.button.UnsizedButton());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
-				} else if (selectedItemRibbon.getValue().equals("Split Button")) {
+				} else if (selectedItemRibbon.getValue().equals("Menu")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Button");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.ButtonInsideSplitButton());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.button.UnsizedButton());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
-					alertError("Button", "Group, Button Group, Split Button or Dialog Box Launcher");
+					alertError("Button", "Group, Button Group, Menu or Dialog Box Launcher");
 				}
 			} else if (selectedItem.getValue().equals("Check Box")) { // Add
 																		// CheckBox
@@ -183,23 +221,16 @@ public class MainWindowController {
 																		// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Check Box");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.CheckBox());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.CheckBox());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else if (selectedItemRibbon.getValue().equals("Menu")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Check Box");
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.CheckBox());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					alertError("Check Box", "Group");
-				}
-			} else if (selectedItem.getValue().equals("Split Button")) { // Add
-																			// SplitButton
-																			// to
-																			// group
-				if (selectedItemRibbon.getValue().equals("Group")) {
-					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Split Button");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.SplitButton());
-					itemChild1.setExpanded(true);
-					selectedItemRibbon.getChildren().add(itemChild1);
-				} else {
-					alertError("Split Button", "Group");
+					alertError("Check Box", "Group or Menu");
 				}
 			} else if (selectedItem.getValue().equals("Toggle Button")) { // Add
 																			// ToggleButton
@@ -207,21 +238,21 @@ public class MainWindowController {
 																			// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Toggle Button");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.ToggleButton());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.toggleButton.ToggleButton());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else if (selectedItemRibbon.getValue().equals("Button Group")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Toggle Button");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.UnsizedToggleButton());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.toggleButton.UnsizedToggleButton());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
-				} else if (selectedItemRibbon.getValue().equals("Split Button")) {
+				} else if (selectedItemRibbon.getValue().equals("Menu")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Toggle Button");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.ToggleButtonInsideSplitButton());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.toggleButton.UnsizedToggleButton());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
-					alertError("Toggle Button", "Group, Split Button or Button Group");
+					alertError("Toggle Button", "Group or Button Group");
 				}
 			} else if (selectedItem.getValue().equals("Edit Box")) { // Add
 																		// EditBox
@@ -229,7 +260,7 @@ public class MainWindowController {
 																		// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Edit Box");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.EditBox());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.EditBox());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
@@ -241,11 +272,16 @@ public class MainWindowController {
 																		// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Separator");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.Separator());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.separator.Separator());
+					itemChild1.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild1);
+				} else if (selectedItemRibbon.getValue().equals("Menu")) {
+					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Separator");
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.separator.MenuSeparator());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
-					alertError("Separator", "Group");
+					alertError("Separator", "Group or Menu");
 				}
 			} else if (selectedItem.getValue().equals("Dialog Box Launcher")) { // Add
 				// DialogBoxLauncher
@@ -253,7 +289,7 @@ public class MainWindowController {
 				// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Dialog Box Launcher");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.DialogBoxLauncher());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.DialogBoxLauncher());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
@@ -266,7 +302,7 @@ public class MainWindowController {
 																		// group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Combo Box");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.ComboBox());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.ComboBox());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else {
@@ -277,12 +313,17 @@ public class MainWindowController {
 																	// to group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Gallery");
-					itemChild1.setSimpleRibbonElement(new ribbonElements.Gallery());
+					itemChild1.setSimpleRibbonContainer(new ribbonElements.gallery.Gallery());
 					itemChild1.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild1);
 				} else if (selectedItemRibbon.getValue().equals("Button Group")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Gallery");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.UnsizedGallery());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.gallery.UnsizedGallery());
+					itemChild2.setExpanded(true);
+					selectedItemRibbon.getChildren().add(itemChild2);
+				} else if (selectedItemRibbon.getValue().equals("Menu")) {
+					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Gallery");
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.gallery.UnsizedGallery());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
@@ -292,7 +333,7 @@ public class MainWindowController {
 																	// Gallery
 				if (selectedItemRibbon.getValue().equals("Gallery")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Item");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.Item());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.Item());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
@@ -302,7 +343,7 @@ public class MainWindowController {
 																	// ComboBox
 				if (selectedItemRibbon.getValue().equals("Combo Box")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Item");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.Item());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.Item());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
@@ -314,7 +355,7 @@ public class MainWindowController {
 				// Group
 				if (selectedItemRibbon.getValue().equals("Group")) {
 					ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Button Group");
-					itemChild2.setSimpleRibbonElement(new ribbonElements.ButtonGroup());
+					itemChild2.setSimpleRibbonContainer(new ribbonElements.ButtonGroup());
 					itemChild2.setExpanded(true);
 					selectedItemRibbon.getChildren().add(itemChild2);
 				} else {
@@ -333,7 +374,7 @@ public class MainWindowController {
 						ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Image");
 						ribbonElements.Image image = new ribbonElements.Image();
 						image.setAttribute("pathToFile", path);
-						itemChild1.setSimpleRibbonElement(image);
+						itemChild1.setSimpleRibbonContainer(image);
 						itemChild1.setExpanded(true);
 						selectedItemRibbon.getChildren().add(itemChild1);
 					}
@@ -357,6 +398,7 @@ public class MainWindowController {
 	 */
 	private void alertError(String child, String parent) {
 		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
 		alert.setHeaderText("An error occurred");
 		alert.setContentText("You can add '" + child + "' to the '" + parent + "' only.");
 		alert.showAndWait();
@@ -369,67 +411,24 @@ public class MainWindowController {
 		ExtendedTreeItem<String> root = new ExtendedTreeItem<String>("Root");
 		root.setExpanded(true);
 		// create child
-		ExtendedTreeItem<String> itemChild1 = new ExtendedTreeItem<String>("Tab");
-		itemChild1.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild2 = new ExtendedTreeItem<String>("Group");
-		itemChild2.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild3 = new ExtendedTreeItem<String>("Button");
-		itemChild3.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild4 = new ExtendedTreeItem<String>("Check Box");
-		itemChild4.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild5 = new ExtendedTreeItem<String>("Image");
-		itemChild5.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild6 = new ExtendedTreeItem<String>("Label Control");
-		itemChild6.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild7 = new ExtendedTreeItem<String>("Toggle Button");
-		itemChild7.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild8 = new ExtendedTreeItem<String>("Edit Box");
-		itemChild8.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild9 = new ExtendedTreeItem<String>("Separator");
-		itemChild9.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild10 = new ExtendedTreeItem<String>("Combo Box");
-		itemChild10.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild11 = new ExtendedTreeItem<String>("Item");
-		itemChild11.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild12 = new ExtendedTreeItem<String>("Gallery");
-		itemChild12.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild13 = new ExtendedTreeItem<String>("Dialog Box Launcher");
-		itemChild13.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild14 = new ExtendedTreeItem<String>("Button Group");
-		itemChild14.setExpanded(true);
-
-		ExtendedTreeItem<String> itemChild15 = new ExtendedTreeItem<String>("Split Button");
-		itemChild14.setExpanded(true);
-
-		// root is the parent of itemChild
-		root.getChildren().add(itemChild1);
-		root.getChildren().add(itemChild2);
-		root.getChildren().add(itemChild3);
-		root.getChildren().add(itemChild4);
-		root.getChildren().add(itemChild5);
-		root.getChildren().add(itemChild6);
-		root.getChildren().add(itemChild7);
-		root.getChildren().add(itemChild8);
-		root.getChildren().add(itemChild9);
-		root.getChildren().add(itemChild10);
-		root.getChildren().add(itemChild11);
-		root.getChildren().add(itemChild12);
-		root.getChildren().add(itemChild13);
-		root.getChildren().add(itemChild14);
-		root.getChildren().add(itemChild15);
+		List <ExtendedTreeItem<String>> items = new ArrayList<ExtendedTreeItem<String>>();
+		items.add(new ExtendedTreeItem<String>("Tab"));
+		items.add(new ExtendedTreeItem<String>("Group"));
+		items.add(new ExtendedTreeItem<String>("Button"));
+		items.add(new ExtendedTreeItem<String>("Check Box"));
+		items.add(new ExtendedTreeItem<String>("Image"));
+		items.add(new ExtendedTreeItem<String>("Label Control"));
+		items.add(new ExtendedTreeItem<String>("Toggle Button"));
+		items.add(new ExtendedTreeItem<String>("Edit Box"));
+		items.add(new ExtendedTreeItem<String>("Separator"));
+		items.add(new ExtendedTreeItem<String>("Combo Box"));
+		items.add(new ExtendedTreeItem<String>("Item"));
+		items.add(new ExtendedTreeItem<String>("Gallery"));
+		items.add(new ExtendedTreeItem<String>("Dialog Box Launcher"));
+		items.add(new ExtendedTreeItem<String>("Button Group"));
+		items.add(new ExtendedTreeItem<String>("Menu"));
+		items.forEach((item)->item.setExpanded(true));
+		root.getChildren().addAll(items);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
 	}
@@ -472,7 +471,7 @@ public class MainWindowController {
 		vBox.getChildren().clear();
 		vBox.setPadding(new Insets(10));
 		try {
-			Map<String, String> map = selectedItem.getSimpleRibbonElement().getAttributes();
+			Map<String, String> map = selectedItem.getSimpleRibbonContainer().getAttributes();
 			for (Entry<String, String> element : map.entrySet()) {
 				Label label1 = new Label(element.getKey());
 				label1.setFont(new Font(16));
@@ -496,14 +495,14 @@ public class MainWindowController {
 								Number newValue) {
 							String newVal = values[newValue.intValue()];
 							if (!newVal.trim().equals("")) {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newVal);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), newVal);
 							} else {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), null);
 							}
 						}
 					});
 					hBox.getChildren().add(choiceBox);
-				} else if (element.getKey().equals("size")) {
+				} else if (element.getKey().equals("size") || element.getKey().equals("itemSize")) {
 					final String[] values = { "large", "normal", "" };
 					ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList(values));
 					choiceBox.getSelectionModel().select(element.getValue());
@@ -517,9 +516,9 @@ public class MainWindowController {
 								Number newValue) {
 							String newVal = values[newValue.intValue()];
 							if (!newVal.trim().equals("")) {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newVal);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), newVal);
 							} else {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), null);
 							}
 
 						}
@@ -533,9 +532,9 @@ public class MainWindowController {
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
 							if (!newValue.trim().equals("")) {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), newValue);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), newValue);
 							} else {
-								selectedItem.getSimpleRibbonElement().setAttribute(element.getKey(), null);
+								selectedItem.getSimpleRibbonContainer().setAttribute(element.getKey(), null);
 							}
 						}
 					});

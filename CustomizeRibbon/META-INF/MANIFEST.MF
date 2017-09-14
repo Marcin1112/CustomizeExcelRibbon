@@ -8,3 +8,4 @@ Export-Package: main,
  services,
  tree,
  view
+Import-Package: ribbonElements

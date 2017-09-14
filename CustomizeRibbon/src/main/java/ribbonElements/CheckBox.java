@@ -15,10 +15,10 @@ import org.w3c.dom.Element;
  * @author Marcin
  *
  */
-public class CheckBox implements SimpleRibbonElement, SimpleRibbonContainer {
+public class CheckBox implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * constructor
@@ -125,21 +125,7 @@ public class CheckBox implements SimpleRibbonElement, SimpleRibbonContainer {
 	/**
 	 * @inheritDoc
 	 */
-	@Override
-	public Element getSimpleRibbonContainerElement() {
-		Element checkBox = doc.createElement("checkBox");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				checkBox.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return checkBox;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 	

@@ -15,10 +15,10 @@ import org.w3c.dom.Element;
  * @author Marcin
  *
  */
-public class ComboBox implements SimpleRibbonElement, SimpleRibbonContainer {
+public class ComboBox implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * constructor
@@ -134,21 +134,7 @@ public class ComboBox implements SimpleRibbonElement, SimpleRibbonContainer {
 	/**
 	 * @inheritDoc
 	 */
-	@Override
-	public Element getSimpleRibbonContainerElement() {
-		Element comboBox = doc.createElement("comboBox");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				comboBox.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return comboBox;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 

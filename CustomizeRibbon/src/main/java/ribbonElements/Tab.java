@@ -15,15 +15,15 @@ import org.w3c.dom.Element;
  * @author Marcin
  *
  */
-public class Tab implements SimpleRibbonContainer, SimpleRibbonElement {
+public class Tab implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * @inheritDoc
 	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 
@@ -90,19 +90,6 @@ public class Tab implements SimpleRibbonContainer, SimpleRibbonElement {
 	 */
 	public Map<String, String> getAttributes() {
 		return attributes;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public Element getSimpleRibbonContainerElement() {
-		Element tab = doc.createElement("tab");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				tab.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return tab;
 	}
 
 	/**

@@ -17,12 +17,12 @@ import org.w3c.dom.Element;
  */
 public class Tabs implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * @inheritDoc
 	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 
@@ -60,6 +60,14 @@ public class Tabs implements SimpleRibbonContainer {
 	@Override
 	public String toString() {
 		return "Tabs";
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public Element getXMLElement() {
+		return null;
 	}
 
 }

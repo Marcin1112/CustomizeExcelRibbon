@@ -1,4 +1,4 @@
-package ribbonElements;
+package ribbonElements.button;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,16 +9,18 @@ import java.util.Map.Entry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ribbonElements.SimpleRibbonContainer;
+
 /**
  * unsized button
  * 
  * @author Marcin
  *
  */
-public class UnsizedButton implements SimpleRibbonElement, SimpleRibbonContainer {
+public class UnsizedButton implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * constructor
@@ -124,22 +126,8 @@ public class UnsizedButton implements SimpleRibbonElement, SimpleRibbonContainer
 	/**
 	 * @inheritDoc
 	 */
-	@Override
-	public Element getSimpleRibbonContainerElement() {
-		Element button = doc.createElement("button");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				button.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return button;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
-	
+
 }

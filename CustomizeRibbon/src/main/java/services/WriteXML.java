@@ -1,11 +1,7 @@
 package services;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.GenericArrayType;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,34 +16,31 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import ribbonElements.Button;
 import ribbonElements.ButtonGroup;
-import ribbonElements.ButtonInsideSplitButton;
 import ribbonElements.CheckBox;
 import ribbonElements.ComboBox;
 import ribbonElements.DialogBoxLauncher;
 import ribbonElements.EditBox;
-import ribbonElements.Gallery;
 import ribbonElements.Group;
 import ribbonElements.Image;
 import ribbonElements.Item;
 import ribbonElements.LabelControl;
-import ribbonElements.Separator;
+import ribbonElements.Menu;
 import ribbonElements.SimpleRibbonContainer;
-import ribbonElements.SimpleRibbonElement;
-import ribbonElements.SplitButton;
 import ribbonElements.Tab;
-import ribbonElements.ToggleButton;
-import ribbonElements.ToggleButtonInsideSplitButton;
-import ribbonElements.UnsizedButton;
-import ribbonElements.UnsizedGallery;
-import ribbonElements.UnsizedToggleButton;
+import ribbonElements.button.Button;
+import ribbonElements.button.UnsizedButton;
+import ribbonElements.gallery.Gallery;
+import ribbonElements.gallery.UnsizedGallery;
+import ribbonElements.separator.MenuSeparator;
+import ribbonElements.separator.Separator;
+import ribbonElements.toggleButton.ToggleButton;
+import ribbonElements.toggleButton.UnsizedToggleButton;
 import tree.ExtendedTreeItem;
 
 /**
@@ -171,7 +164,7 @@ public class WriteXML {
 						ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) nodeR;
 						SimpleRibbonContainer tab = new Tab(doc);
 						fillAttributes(node1, tab);
-						Element tabXML = tab.getSimpleRibbonContainerElement();
+						Element tabXML = tab.getXMLElement();
 						tabs.appendChild(tabXML);
 
 						for (TreeItem<String> nodeGroup : nodeR.getChildren()) {
@@ -308,29 +301,63 @@ public class WriteXML {
 												buttonXML.appendChild(itemXML);
 											}
 										}
-									} else if (nodeButton.getValue().equals("Split Button")) {
+
+									} else if (nodeButton.getValue().equals("Menu")) {
 										ExtendedTreeItem<String> node3 = (ExtendedTreeItem<String>) nodeButton;
-										SplitButton btn = new SplitButton(doc);
+										Menu btn = new Menu(doc);
 										fillAttributes(node3, btn);
 										Element buttonXML = btn.getXMLElement();
 										groupXML.appendChild(buttonXML);
 
 										for (TreeItem<String> nodeItem : nodeButton.getChildren()) {
-											if (nodeItem.getValue().equals("Button")) {
+											if (nodeItem.getValue().equals("Button")) { // Unsized
+																						// Button
 												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
-												ButtonInsideSplitButton itm = new ButtonInsideSplitButton(doc);
+												UnsizedButton itm = new UnsizedButton(doc);
 												fillAttributes(nodeIt, itm);
 												Element itemXML = itm.getXMLElement();
 												buttonXML.appendChild(itemXML);
-											} else if (nodeItem.getValue().equals("Toggle Button")) {
+											} else if (nodeItem.getValue().equals("Check Box")) { // Check
+																									// Box
 												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
-												ToggleButtonInsideSplitButton itm = new ToggleButtonInsideSplitButton(
-														doc);
+												CheckBox itm = new CheckBox(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											} else if (nodeItem.getValue().equals("Gallery")) { // Unsized
+																								// Gallery
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedGallery itm = new UnsizedGallery(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+
+												for (TreeItem<String> nodeItem2 : nodeItem.getChildren()) {
+													if (nodeItem2.getValue().equals("Item")) {
+														ExtendedTreeItem<String> nodeIt2 = (ExtendedTreeItem<String>) nodeItem2;
+														Item itm2 = new Item(doc);
+														fillAttributes(nodeIt2, itm2);
+														Element itemXML2 = itm2.getXMLElement();
+														itemXML.appendChild(itemXML2);
+													}
+												}
+											} else if (nodeItem.getValue().equals("Toggle Button")) { // Unsized
+																										// ToggleButton
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												UnsizedToggleButton itm = new UnsizedToggleButton(doc);
+												fillAttributes(nodeIt, itm);
+												Element itemXML = itm.getXMLElement();
+												buttonXML.appendChild(itemXML);
+											} else if (nodeItem.getValue().equals("Separator")) { // Menu
+																									// Separator
+												ExtendedTreeItem<String> nodeIt = (ExtendedTreeItem<String>) nodeItem;
+												MenuSeparator itm = new MenuSeparator(doc);
 												fillAttributes(nodeIt, itm);
 												Element itemXML = itm.getXMLElement();
 												buttonXML.appendChild(itemXML);
 											}
 										}
+
 									}
 								}
 							}
@@ -351,7 +378,7 @@ public class WriteXML {
 	 *            here data are paste
 	 */
 	private static void fillAttributes(ExtendedTreeItem<String> node1, SimpleRibbonContainer tab) {
-		for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
+		for (Entry<String, String> n : node1.getSimpleRibbonContainer().getAttributes().entrySet()) {
 			tab.setAttribute(n.getKey(), n.getValue());
 		}
 	}
@@ -368,7 +395,7 @@ public class WriteXML {
 				if (child.getValue().equals("Image")) {
 					ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) child;
 					Image img = new Image();
-					for (Entry<String, String> n : node1.getSimpleRibbonElement().getAttributes().entrySet()) {
+					for (Entry<String, String> n : node1.getSimpleRibbonContainer().getAttributes().entrySet()) {
 						img.setAttribute(n.getKey(), n.getValue());
 					}
 					images.put(numberOfImages, img);

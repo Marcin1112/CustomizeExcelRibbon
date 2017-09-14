@@ -15,10 +15,10 @@ import org.w3c.dom.Element;
  * @author Marcin
  *
  */
-public class Item implements SimpleRibbonElement, SimpleRibbonContainer {
+public class Item implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Document doc;
-	private List<SimpleRibbonElement> groups = new ArrayList<SimpleRibbonElement>();
+	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
 
 	/**
 	 * constructor
@@ -97,21 +97,7 @@ public class Item implements SimpleRibbonElement, SimpleRibbonContainer {
 	/**
 	 * @inheritDoc
 	 */
-	@Override
-	public Element getSimpleRibbonContainerElement() {
-		Element item = doc.createElement("item");
-		for (Entry<String, String> i : attributes.entrySet()) {
-			if (i.getValue() != null) {
-				item.setAttribute(i.getKey(), i.getValue());
-			}
-		}
-		return item;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void addChild(SimpleRibbonElement group) {
+	public void addChild(SimpleRibbonContainer group) {
 		groups.add(group);
 	}
 
