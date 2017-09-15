@@ -7,9 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -68,6 +73,10 @@ public class MainWindowController {
 	@FXML
 	private Button add;
 	@FXML
+	private Button moveUpButton;
+	@FXML
+	private Button moveDownButton;
+	@FXML
 	private VBox vBox;
 	@FXML
 	private Button removeElement;
@@ -94,21 +103,7 @@ public class MainWindowController {
 	@FXML
 	public void saveTree(ActionEvent event)
 			throws IOException, TransformerException, ParserConfigurationException, SAXException {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Excel file");
-		File file = fileChooser.showOpenDialog(null);
-
-		if (file != null) {
-			String path = file.getAbsolutePath();
-
-			RibbonExcelImpl ribbon = new RibbonExcelImpl();
-			ribbon.setPathToExcelFile(path);
-			ribbon.extractFiles();
-			ribbon.createEmptyRibbon();
-			ribbon.writeXML(treeView);
-			ribbon.buildExcelFile();
-			ribbon.deleteDirectory();
-		}
+		save();
 	}
 
 	/**
@@ -133,17 +128,27 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void removeElement(ActionEvent event) {
-		ExtendedTreeItem<String> selectedItemRibbon = (ExtendedTreeItem<String>) treeView.getSelectionModel()
-				.getSelectedItem();
-		if (selectedItemRibbon.getValue().equals("Images") || selectedItemRibbon.getValue().equals("Ribbon")) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText("An error occurred");
-			alert.setTitle("Error");
-			alert.setContentText("You can not remove 'Ribbon' or 'Images' node");
-			alert.showAndWait();
-		} else {
-			selectedItemRibbon.getParent().getChildren().remove(selectedItemRibbon);
-		}
+		removeElement();
+	}
+
+	/**
+	 * Move up a child in the treeView
+	 * 
+	 * @param event
+	 */
+	@FXML
+	public void moveUp(ActionEvent event) {
+		moveUp(treeView.getSelectionModel().getSelectedItem());
+	}
+
+	/**
+	 * Move down a child in the treeView
+	 * 
+	 * @param event
+	 */
+	@FXML
+	public void moveDown(ActionEvent event) {
+		moveDown(treeView.getSelectionModel().getSelectedItem());
 	}
 
 	/**
@@ -153,6 +158,13 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void addToRibbon(ActionEvent event) {
+		addToRibbon();
+	}
+
+	/**
+	 * add node to TreeView
+	 */
+	private void addToRibbon() {
 		ExtendedTreeItem<String> root = (ExtendedTreeItem<String>) treeView.getRoot();
 		ExtendedTreeItem<String> selectedItem = (ExtendedTreeItem<String>) listOfAvailableControls.getSelectionModel()
 				.getSelectedItem();
@@ -411,7 +423,7 @@ public class MainWindowController {
 		ExtendedTreeItem<String> root = new ExtendedTreeItem<String>("Root");
 		root.setExpanded(true);
 		// create child
-		List <ExtendedTreeItem<String>> items = new ArrayList<ExtendedTreeItem<String>>();
+		List<ExtendedTreeItem<String>> items = new ArrayList<ExtendedTreeItem<String>>();
 		items.add(new ExtendedTreeItem<String>("Tab"));
 		items.add(new ExtendedTreeItem<String>("Group"));
 		items.add(new ExtendedTreeItem<String>("Button"));
@@ -427,7 +439,7 @@ public class MainWindowController {
 		items.add(new ExtendedTreeItem<String>("Dialog Box Launcher"));
 		items.add(new ExtendedTreeItem<String>("Button Group"));
 		items.add(new ExtendedTreeItem<String>("Menu"));
-		items.forEach((item)->item.setExpanded(true));
+		items.forEach((item) -> item.setExpanded(true));
 		root.getChildren().addAll(items);
 		listOfAvailableControls.setRoot(root);
 		listOfAvailableControls.setShowRoot(false);
@@ -447,6 +459,7 @@ public class MainWindowController {
 		root.getChildren().add(images);
 
 		ExtendedTreeItem<String> ribbon = new ExtendedTreeItem<String>("Ribbon");
+		ribbon.setSimpleRibbonContainer(new Tabs());
 		ribbon.setExpanded(true);
 		root.getChildren().add(ribbon);
 
@@ -471,17 +484,21 @@ public class MainWindowController {
 		vBox.getChildren().clear();
 		vBox.setPadding(new Insets(10));
 		try {
-			Map<String, String> map = selectedItem.getSimpleRibbonContainer().getAttributes();
+			Map<String, String> unsortedMap = selectedItem.getSimpleRibbonContainer().getAttributes();
+			TreeMap<String, String> map = new TreeMap<>(unsortedMap); // sorting
+																		// map
+
 			for (Entry<String, String> element : map.entrySet()) {
 				Label label1 = new Label(element.getKey());
 				label1.setFont(new Font(16));
-				label1.setPrefWidth(150);
+				label1.setPrefWidth(240);
 				HBox hBox = new HBox();
 				hBox.setPadding(new Insets(4));
 				hBox.getChildren().add(label1);
 
 				if (element.getKey().equals("enabled") || element.getKey().equals("showImage")
-						|| element.getKey().equals("showLabel") || element.getKey().equals("visible")) {
+						|| element.getKey().equals("showLabel") || element.getKey().equals("visible")
+						|| selectedItem.getValue().equals("Ribbon")) {
 					final String[] values = { "true", "false", "" };
 					ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList(values));
 					choiceBox.getSelectionModel().select(element.getValue());
@@ -544,6 +561,91 @@ public class MainWindowController {
 				vBox.getChildren().add(hBox);
 			}
 		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * Move up item in treeView
+	 * 
+	 * @param item
+	 *            selected TreeItem
+	 */
+	private void moveUp(TreeItem item) {
+		TreeItem parent = item.getParent();
+		int index = parent.getChildren().indexOf(item);
+		parent.getChildren().remove(index);
+		try {
+			parent.getChildren().add(index - 1, item);
+		} catch (Exception e) {
+			parent.getChildren().add(index, item);
+		}
+
+		treeView.getSelectionModel().select(item);
+	}
+
+	/**
+	 * Move down item in treeView
+	 * 
+	 * @param item
+	 *            selected TreeItem
+	 */
+	private void moveDown(TreeItem item) {
+		TreeItem parent = item.getParent();
+		int index = parent.getChildren().indexOf(item);
+		parent.getChildren().remove(index);
+		try {
+			parent.getChildren().add(index + 1, item);
+		} catch (Exception e) {
+			parent.getChildren().add(index, item);
+		}
+
+		treeView.getSelectionModel().select(item);
+	}
+
+	/**
+	 * Save Ribbon to Excel file
+	 * 
+	 * @throws IOException
+	 *             Exception
+	 * @throws TransformerException
+	 *             Exception
+	 * @throws ParserConfigurationException
+	 *             Exception
+	 * @throws SAXException
+	 *             Exception
+	 */
+	private void save() throws IOException, TransformerException, ParserConfigurationException, SAXException {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Excel file");
+		File file = fileChooser.showOpenDialog(null);
+
+		if (file != null) {
+			String path = file.getAbsolutePath();
+
+			RibbonExcelImpl ribbon = new RibbonExcelImpl();
+			ribbon.setPathToExcelFile(path);
+			ribbon.extractFiles();
+			ribbon.createEmptyRibbon();
+			ribbon.writeXML(treeView);
+			ribbon.buildExcelFile();
+			ribbon.deleteDirectory();
+		}
+	}
+
+	/**
+	 * Remove node from TreeView
+	 */
+	private void removeElement() {
+		ExtendedTreeItem<String> selectedItemRibbon = (ExtendedTreeItem<String>) treeView.getSelectionModel()
+				.getSelectedItem();
+		if (selectedItemRibbon.getValue().equals("Images") || selectedItemRibbon.getValue().equals("Ribbon")) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setHeaderText("An error occurred");
+			alert.setTitle("Error");
+			alert.setContentText("You can not remove 'Ribbon' or 'Images' node");
+			alert.showAndWait();
+		} else {
+			selectedItemRibbon.getParent().getChildren().remove(selectedItemRibbon);
 		}
 	}
 }

@@ -154,11 +154,23 @@ public class WriteXML {
 		ribbon.setAttribute("startFromScratch", "false");
 		rootElement.appendChild(ribbon);
 
-		Element tabs = doc.createElement("tabs");
-		ribbon.appendChild(tabs);
-
 		for (TreeItem<String> node : tree.getRoot().getChildren()) {
 			if (node.getValue().equals("Ribbon")) {
+				Element tabs = doc.createElement("tabs");
+				ribbon.appendChild(tabs);
+				ExtendedTreeItem<String> nodeTabs = (ExtendedTreeItem<String>) node;
+				for (Entry<String, String> singleTab : nodeTabs.getSimpleRibbonContainer().getAttributes().entrySet()) { // set
+																															// visiblity
+																															// of
+																															// tabHome...
+					if (singleTab.getValue() != null) {
+						Element e = doc.createElement("tab");
+						e.setAttribute("idMso", singleTab.getKey());
+						e.setAttribute("visible", singleTab.getValue());
+						tabs.appendChild(e);
+					}
+				}
+
 				for (TreeItem<String> nodeR : node.getChildren()) {
 					if (nodeR.getValue().equals("Tab")) {
 						ExtendedTreeItem<String> node1 = (ExtendedTreeItem<String>) nodeR;

@@ -18,6 +18,34 @@ import org.w3c.dom.Element;
 public class Tabs implements SimpleRibbonContainer {
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private List<SimpleRibbonContainer> groups = new ArrayList<SimpleRibbonContainer>();
+	private Document doc;
+
+	/**
+	 * constructor
+	 * 
+	 * 
+	 */
+	public Tabs() {
+		fillMap();
+	}
+
+	/**
+	 * constructor
+	 * 
+	 * @param doc
+	 *            reference to the XML document in which button will be created
+	 */
+	public Tabs(Document doc) {
+		this.doc = doc;
+		fillMap();
+	}
+
+	/**
+	 * fill Map 'attributes'
+	 */
+	private void fillMap() {
+		MsoControls.getTabs().forEach((element) -> attributes.put(element, null));
+	}
 
 	/**
 	 * @inheritDoc
@@ -48,26 +76,20 @@ public class Tabs implements SimpleRibbonContainer {
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public Element getSimpleRibbonContainerElement() {
-		return null;
-	}
-
-	/**
 	 * toString method
 	 */
 	@Override
 	public String toString() {
 		return "Tabs";
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	@Override
 	public Element getXMLElement() {
-		return null;
+		Element group = doc.createElement("tabs");
+		return group;
 	}
 
 }
